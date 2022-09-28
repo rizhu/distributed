@@ -13,20 +13,22 @@ int main(int argc, char *argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &mpi_size );
 
-    int size = 16;
+    int size = 4;
     DistributedArray<int>* arr = new DistributedArray<int>(size);
     for (int i = 0; i < size; i++)
         arr->set(i, i);
     
-    for (int i = 0; i < size; i++)
-        assert(i == arr->get(i));
+    for (int i = 0; i < size; i++) {
+        int recv = arr->get(i);
+        assert(i == recv);
+    }
 
     delete arr;
 
     MPI_Finalize();
 
     if (mpi_rank == 0) {
-        cout << "test_array_one_proc: PASSED" << endl;
+        cout << "test_array_simple: PASSED" << endl;
     }
     return 0;
 }
